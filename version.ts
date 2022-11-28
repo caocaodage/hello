@@ -9,7 +9,8 @@ const pool = new postgres.Pool(databaseUrl, 3, true);
 
 BigInt.prototype.toJSON = function () { return this.toString() };
 
-serve(async (req:Request) => {
+
+serve(async (req:Request,connInfo) => {
     // Parse the URL and check that the requested endpoint is /todos. If it is
     // not, return a 404 response.
     const url = new URL(req.url);
@@ -49,6 +50,12 @@ serve(async (req:Request) => {
           `;
           // Return a 201 Created response
           return new Response("", { status: 201 });
+      }else if(url.pathname=='/getIp'){
+        const addr = connInfo.remoteAddr; 
+        const ip = addr.hostname;
+        return new Response(`Your IP address is <b>${ip}</b>`, {
+          headers: { "content-type": "text/html" },
+        });
       }else{ // If this is neither a POST, or a GET return a 405 response.
           return new Response("Method Not Allowed", { status: 405 });
       }
