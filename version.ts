@@ -9,7 +9,7 @@ const pool = new postgres.Pool(databaseUrl, 3, true);
 
 BigInt.prototype.toJSON = function () { return this.toString() };
 
-serve(async (req) => {
+serve(async (req:Request) => {
     // Parse the URL and check that the requested endpoint is /todos. If it is
     // not, return a 404 response.
     const url = new URL(req.url);
@@ -20,8 +20,7 @@ serve(async (req) => {
       return new Response("Method Not Allowed", { status: 405 });
     }
 
-    console.log(url);
-    
+    console.log(url,req.body);
   
     // Grab a connection from the database pool
     const connection = await pool.connect();
