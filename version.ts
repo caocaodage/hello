@@ -26,8 +26,9 @@ serve(async (req) => {
         case "/fetch": { // This is a GET request. Return a list of all todos.
           // Run the query
           const result = await connection.queryObject`
-            SELECT * FROM url
+            SELECT * FROM url where true
           `;
+          console.log("result",result)
   
           // Encode the result as JSON
           const body = JSON.stringify(result.rows, null, 2);
