@@ -1,0 +1,54 @@
+QueryObjectResult {
+  command: "SELECT",
+  rowCount: 1,
+  rowDescription: RowDescription {
+    columnCount: 4,
+    columns: [
+      Column {
+        name: "id",
+        tableOid: 25916,
+        index: 1,
+        typeOid: 20,
+        columnLength: 8,
+        typeModifier: -1,
+        format: 0
+      },
+      Column {
+        name: "created_at",
+        tableOid: 25916,
+        index: 2,
+        typeOid: 1184,
+        columnLength: 8,
+        typeModifier: -1,
+        format: 0
+      },
+      Column {
+        name: "key",
+        tableOid: 25916,
+        index: 3,
+        typeOid: 1043,
+        columnLength: -1,
+        typeModifier: -1,
+        format: 0
+      },
+      Column {
+        name: "url",
+        tableOid: 25916,
+        index: 4,
+        typeOid: 1043,
+        columnLength: -1,
+        typeModifier: -1,
+        format: 0
+      }
+    ]
+  },
+  warnings: [],
+  query: Query {
+    args: [],
+    camelcase: undefined,
+    fields: undefined,
+    result_type: 1,
+    text: "\n            SELECT * FROM url where true\n          "
+  },
+  rows: [ { id: 1n, created_at: 2022-11-25T09:32:18.380Z, key: "test", url: "ddddd" } ]
+}

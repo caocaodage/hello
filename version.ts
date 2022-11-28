@@ -21,7 +21,7 @@ serve(async (req:Request,connInfo) => {
       return new Response("Method Not Allowed", { status: 405 });
     }
 
-    console.log(url,req.body);
+    console.log(url,req);
   
     // Grab a connection from the database pool
     const connection = await pool.connect();
@@ -31,7 +31,7 @@ serve(async (req:Request,connInfo) => {
           const result = await connection.queryObject`
             SELECT * FROM url where true
           `;
-          console.log("result",result)
+          // console.log("result",result)
           const body = JSON.stringify(result.rows, null, 2);
           return new Response(body, {
             headers: { "content-type": "application/json" },
