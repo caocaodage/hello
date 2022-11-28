@@ -63,21 +63,22 @@ serve(async (req:Request,connInfo) => {
           headers: { "content-type": "application/text" },
         });
       } else if (url.pathname=="/post") { 
-        let appUrl=url.searchParams.get("appUrl");
+        let appUrl=url.searchParams.get("appUrl")||"";
+        appUrl=decodeURIComponent(appUrl)
         const result = await connection.queryObject<string>`
           SELECT * FROM url WHERE key=${appId}
         `;
         if(result.rows[0]){
           await connection.queryObject`
-          INSERT INTO url (key , url) VALUES (${appId} , ${appUrl})
+          UPDATE  url SET  url= ${appUrl} where key=${appId}
         `;
         }else{
           await connection.queryObject`
-          UPDATE  url SET  url= ${appUrl} where key=${appId}
-        `;
+            INSERT INTO url (key , url) VALUES (${appId} , ${appUrl})
+          `;
         }
         return new Response("OK", {  });
-        
+
       }else if(url.pathname=='/getIp'){
         const addr = connInfo.remoteAddr; 
         const ip = addr.hostname;
