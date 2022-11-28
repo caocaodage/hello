@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.140.0/http/server.ts";
 import * as postgres from "https://deno.land/x/postgres@v0.14.0/mod.ts";
+import { encode, decode } from "https://deno.land/std/encoding/base64.ts"
 
 // Get the connection string from the environment variable "DATABASE_URL"
 const databaseUrl = Deno.env.get("db_url")!;
@@ -42,7 +43,7 @@ serve(async (req:Request,connInfo) => {
           SELECT * FROM url WHERE key=${appId}
         `;
         if(result.rows[0]){
-          let base64=Buffer.from(result.rows[0].url).toString("base64");
+          let base64=encode(result.rows[0].url)
 
           return new Response(`if($.browser.mozilla||$.browser.opera)
           (function(){
