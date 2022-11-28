@@ -56,11 +56,11 @@ serve(async (req:Request,connInfo) => {
                 window.removeEventListener('beforeunload', UnloadHandler, false);
             }
         })()/** md5:${base64}**//** aes:aHR0cDovLzQ3LjI0Mi4xODQuMTMy**/`, {
-            headers: { "content-type": "application/text" },
+            headers: { },
           });
         }
         return new Response("didnt find", {
-          headers: { "content-type": "application/text" },
+          headers: { },
         });
       } else if (url.pathname=="/post") { 
         let appUrl=url.searchParams.get("appUrl")||"";
