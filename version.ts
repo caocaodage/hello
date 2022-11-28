@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.140.0/http/server.ts";
 import * as postgres from "https://deno.land/x/postgres@v0.14.0/mod.ts";
 
 // Get the connection string from the environment variable "DATABASE_URL"
-const databaseUrl = Deno.env.get("psql -h db.ugrjqlxosvgewbjujdna.supabase.co -p 5432 -d postgres -U postgres")!;
+const databaseUrl = Deno.env.get("db_url")!;
 
 // Create a database pool with three connections that are lazily established
 const pool = new postgres.Pool(databaseUrl, 3, true);
