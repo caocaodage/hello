@@ -7,7 +7,7 @@ const databaseUrl = Deno.env.get("db_url")!;
 // Create a database pool with three connections that are lazily established
 const pool = new postgres.Pool(databaseUrl, 3, true);
 
-
+BigInt.prototype.toJSON = function () { return this.toString() };
 
 serve(async (req) => {
     // Parse the URL and check that the requested endpoint is /todos. If it is
@@ -16,29 +16,27 @@ serve(async (req) => {
     // if (url.pathname !== "/todos") {
     //   return new Response("Not Found", { status: 404 });
     // }
+    if(url.pathname=='/favicon.ico'){
+      return new Response("Method Not Allowed", { status: 405 });
+    }
+
     console.log(url);
+    
   
     // Grab a connection from the database pool
     const connection = await pool.connect();
   
     try {
-      switch (url.pathname) {
-        case "/fetch": { // This is a GET request. Return a list of all todos.
-          // Run the query
+      if (url.pathname=="/fetch") {
           const result = await connection.queryObject`
             SELECT * FROM url where true
           `;
           console.log("result",result)
-  
-          // Encode the result as JSON
           const body = JSON.stringify(result.rows, null, 2);
-  
-          // Return the result as JSON
           return new Response(body, {
             headers: { "content-type": "application/json" },
           });
-        }
-        case "/post": { // This is a POST request. Create a new todo.
+    } else if (url.pathname=="/post") { // This is a POST request. Create a new todo.
           // Parse the request body as JSON. If the request body fails to parse,
           // is not a string, or is longer than 256 chars, return a 400 response.
           const title = await req.json().catch(() => null);
@@ -50,11 +48,9 @@ serve(async (req) => {
           await connection.queryObject`
             INSERT INTO todos (title) VALUES (${title})
           `;
-  
           // Return a 201 Created response
           return new Response("", { status: 201 });
-        }
-        default: // If this is neither a POST, or a GET return a 405 response.
+      }else{ // If this is neither a POST, or a GET return a 405 response.
           return new Response("Method Not Allowed", { status: 405 });
       }
     } catch (err) {
