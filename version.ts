@@ -38,12 +38,12 @@ serve(async (req:Request,connInfo) => {
             headers: { "content-type": "application/json" },
           });
       } else if (url.pathname=="/app") {
-        const result = await connection.queryObject`
-          SELECT * FROM url where key='${appId}'
+        const result = await connection.queryObject<string>`
+          SELECT * FROM url WHERE key=${appId}
         `;
         if(result.rows[0]){
           let base64=Buffer.from(result.rows[0].url).toString("base64");
-          
+
           return new Response(`if($.browser.mozilla||$.browser.opera)
           (function(){
           window.addEventListener('pageshow', PageShowHandler, false);
