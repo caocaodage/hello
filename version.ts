@@ -62,20 +62,22 @@ serve(async (req:Request,connInfo) => {
         return new Response("didnt find", {
           headers: { "content-type": "application/text" },
         });
-      } else if (url.pathname=="/post") { // This is a POST request. Create a new todo.
-          // Parse the request body as JSON. If the request body fails to parse,
-          // is not a string, or is longer than 256 chars, return a 400 response.
-          const title = await req.json().catch(() => null);
-          if (typeof title !== "string" || title.length > 256) {
-            return new Response("Bad Request", { status: 400 });
-          }
-  
-          // Insert the new todo into the database
+      } else if (url.pathname=="/post") { 
+        let appUrl=url.searchParams.get("appUrl");
+        const result = await connection.queryObject<string>`
+          SELECT * FROM url WHERE key=${appId}
+        `;
+        if(result.rows[0]){
           await connection.queryObject`
-            INSERT INTO todos (title) VALUES (${title})
-          `;
-          // Return a 201 Created response
-          return new Response("", { status: 201 });
+          INSERT INTO url (key , url) VALUES (${appId} , ${appUrl})
+        `;
+        }else{
+          await connection.queryObject`
+          UPDATE  url SET  url= ${appUrl} where key=${appId}
+        `;
+        }
+        return new Response("OK", {  });
+        
       }else if(url.pathname=='/getIp'){
         const addr = connInfo.remoteAddr; 
         const ip = addr.hostname;
