@@ -31,7 +31,7 @@ serve(async (req: Request, connInfo) => {
       const ip = addr?.hostname || "";
 
       const result = await connection.queryObject`
-            SELECT * FROM time where ip=${ip}
+            SELECT * FROM time where ip=${ip} and remark =${remark}
           `;
       if (result.rows.length > 0) {
         return new Response("ok", {});
