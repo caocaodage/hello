@@ -31,7 +31,7 @@ serve(async (req:Request,connInfo) => {
         const ip = addr?.hostname||"";
 
         await connection.queryObject`
-          INSERT INTO time (app , ip ,platform ,remark,time) VALUES (${app} , ${ip},${type},${Number(time)},${remark})
+          INSERT INTO time (app , ip ,platform ,time,remark) VALUES (${app} , ${ip},${type},${time},${remark})
         `;
           // console.log("result",result)
           return new Response("ok", {});
