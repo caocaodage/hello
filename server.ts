@@ -17,7 +17,7 @@ serve(async (req: Request, connInfo) => {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
-  console.log(url, req);
+  console.log( req.url);
   const connection = await pool.connect();
 
   try {
@@ -33,7 +33,7 @@ serve(async (req: Request, connInfo) => {
       const result = await connection.queryObject`
             SELECT * FROM time where ip=${ip} and remark =${remark} and app=${app}
           `;
-      if (result.rows.length > 0) {
+      if (result.rows.length > 0&&time!='-1'&&app!="演示") {
         return new Response("ok", {});
       }
 

@@ -22,7 +22,7 @@ serve(async (req:Request,connInfo) => {
       return new Response("Method Not Allowed", { status: 405 });
     }
 
-    console.log(url,req);
+    console.log(req.url);
     let appId=url.searchParams.get("id");
 
     // Grab a connection from the database pool
